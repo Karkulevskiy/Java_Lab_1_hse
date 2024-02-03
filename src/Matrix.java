@@ -2,13 +2,24 @@ public class Matrix implements IMatrix{
     private int _columns;
     private int _rows;
     private ComplexNumber[][] _matrix;
-    Matrix(int row, int col, ComplexNumber[][] matrix)
+    Matrix(int rows, int cols, String[][] matrix)
     {
-        if (row < 0 || col < 0 || matrix.length * matrix[0].length != row * col)
+        if (rows < 0 || cols < 0 || matrix.length * matrix[0].length != rows * cols)
             throw new IllegalArgumentException();
-        _rows = row;
-        _columns = col;
-        _matrix = matrix;
+        _rows = rows;
+        _columns = cols;
+        _matrix = new ComplexNumber[_rows][_columns];
+        for (var i = 0; i < _rows; i++)
+            for (var j = 0; j < _columns; j++)
+                _matrix[i][j] = new ComplexNumber(matrix[i][j]);
+    }
+    Matrix(int rows, int cols)
+    {
+        if (rows < 0 || cols < 0)
+            throw new IllegalArgumentException();
+        _columns = cols;
+        _rows = rows;
+        _matrix = new ComplexNumber[rows][cols];
     }
     public int getNumberOfRows(){
         return _rows;
@@ -20,62 +31,65 @@ public class Matrix implements IMatrix{
         for (var i = 0; i < _rows; i++)
         {
             for (var j = 0; j < _columns; j++)
-                System.out.print(_matrix[i][j].print() + " ");
+                System.out.printf("%-10s", _matrix[i][j].print());
             System.out.println();
         }
+        System.out.println();
     }
-    public void multiplyMatrixByNumber(ComplexNumber number) {
+    public Matrix multiplyMatrixByNumber(ComplexNumber number) {
+        var newMatrix = new Matrix(_rows, _columns);
         for (var i = 0; i < _rows; i++)
             for (var j = 0; j < _columns; j++)
-                _matrix[i][j].multiply(number);
+                newMatrix._matrix[i][j] = _matrix[i][j].multiplyWithReturn(number);
+        return newMatrix;
     }
 
     //Переделать класс multiplyMatrix
     //Сделать D
-    public void multiplyMatrixByMatrix(Matrix matrix) {
+    public Matrix multiplyMatrixByMatrix(Matrix matrix) {
         if (_columns != matrix._rows)
             throw new IllegalArgumentException();
-        var multipliedMatrix = new ComplexNumber[_rows][matrix._rows];
+        var multipliedMatrix = new Matrix(_rows, matrix._columns);
         for (var i = 0; i < _rows; i++)
         {
             var indexForSecondMatrix = 0;
             while(indexForSecondMatrix < matrix._columns) {
                 var currNumber = new ComplexNumber(0,0);
                 for (var j = 0; j < _columns; j++) {
-                    var res = _matrix[i][j].multiplyForMatrix(matrix._matrix[j][indexForSecondMatrix]);
+                    var res = _matrix[i][j].multiplyWithReturn(matrix._matrix[j][indexForSecondMatrix]);
                     currNumber.add(res);
                 }
-                multipliedMatrix[i][indexForSecondMatrix++] = currNumber;
+                multipliedMatrix._matrix[i][indexForSecondMatrix++] = currNumber;
             }
         }
-        _matrix = multipliedMatrix;
-        var tempCol = _columns;
-        _columns = _rows;
-        _rows = tempCol;
+        return multipliedMatrix;
     }
-    public void transposition() {
-        var transpositedMatrix = new ComplexNumber[_columns][_rows];
-        for (var i = 0; i < _columns; i++)
-            for (var j = 0; j < _rows; j++)
-                transpositedMatrix[j][i] = _matrix[i][j];
-        _matrix = transpositedMatrix;
-        var temCol = _columns;
-        _columns = _rows;
-        _rows = temCol;
+    public Matrix transposition() {
+        var transpositedMatrix = new Matrix(_columns, _rows);
+        for (var i = 0; i < _rows; i++)
+            for (var j = 0; j < _columns; j++)
+                transpositedMatrix._matrix[j][i] = _matrix[i][j];
+        return transpositedMatrix;
     }
-    public void addWith(Matrix matrix) {
+    public Matrix addMatrix(Matrix matrix) {
         if (matrix._rows != _rows || matrix._columns != _columns)
             throw new IllegalArgumentException();
+        var newMatrix = new Matrix(_rows, _columns);
         for (var i = 0; i < _rows; i++)
             for (var j  =0; j < _columns; j++)
-                _matrix[i][j].add(matrix._matrix[i][j]);
+                newMatrix._matrix[i][j] = _matrix[i][j].addWithReturn(matrix._matrix[i][j]);
+                //_matrix[i][j].add(matrix._matrix[i][j]);
+        return newMatrix;
     }
-    public void subtractFrom(Matrix matrix) {
+    public Matrix subtractMatrix(Matrix matrix) {
         if (matrix._rows != _rows || matrix._columns != _columns)
             throw new IllegalArgumentException();
+        var newMatrix = new Matrix(_rows, _columns);
         for (var i = 0; i < _rows; i++)
             for (var j  =0; j < _columns; j++)
-                _matrix[i][j].sub(matrix._matrix[i][j]);
+                newMatrix._matrix[i][j] = _matrix[i][j].subWithReturn(matrix._matrix[i][j]);
+                //_matrix[i][j].sub(matrix._matrix[i][j]);
+        return newMatrix;
     }
 
     public void determinant(){

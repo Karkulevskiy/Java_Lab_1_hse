@@ -1,8 +1,8 @@
 public interface IMatrix {
-    void transposition();
-    void addWith(Matrix matrix);
-    void subtractFrom(Matrix matrix);
+    Matrix transposition();
+    Matrix addMatrix(Matrix matrix);
+    Matrix subtractMatrix(Matrix matrix);
     void printMatrix();
-    void multiplyMatrixByNumber(ComplexNumber number);
-    void multiplyMatrixByMatrix(Matrix matrix);
+    Matrix multiplyMatrixByNumber(ComplexNumber number);
+    Matrix multiplyMatrixByMatrix(Matrix matrix);
 }
