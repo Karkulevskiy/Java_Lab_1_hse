@@ -1,8 +1,12 @@
-public class Matrix implements IMatrix{
+package MatrixPackage;
+
+import ComplexNumberPackage.ComplexNumber;
+
+public final class Matrix implements IMatrix {
     private int _columns;
     private int _rows;
     private ComplexNumber[][] _matrix;
-    Matrix(int rows, int cols, String[][] matrix)
+    public Matrix(int rows, int cols, String[][] matrix)
     {
         if (rows < 0 || cols < 0 || matrix.length * matrix[0].length != rows * cols)
             throw new IllegalArgumentException();
@@ -13,7 +17,7 @@ public class Matrix implements IMatrix{
             for (var j = 0; j < _columns; j++)
                 _matrix[i][j] = new ComplexNumber(matrix[i][j]);
     }
-    Matrix(int rows, int cols)
+    public Matrix(int rows, int cols)
     {
         if (rows < 0 || cols < 0)
             throw new IllegalArgumentException();
@@ -43,9 +47,6 @@ public class Matrix implements IMatrix{
                 newMatrix._matrix[i][j] = _matrix[i][j].multiplyWithReturn(number);
         return newMatrix;
     }
-
-    //Переделать класс multiplyMatrix
-    //Сделать D
     public Matrix multiplyMatrixByMatrix(Matrix matrix) {
         if (_columns != matrix._rows)
             throw new IllegalArgumentException();

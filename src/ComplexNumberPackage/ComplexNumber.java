@@ -1,14 +1,14 @@
-import java.util.ArrayList;
+package ComplexNumberPackage;
 
-public class ComplexNumber {
+public final class ComplexNumber implements IComplexNumber {
     public int _realNumber;
     public int _imaginaryNumber;
-    ComplexNumber(int realNumber, int imaginaryNumber)
+    public ComplexNumber(int realNumber, int imaginaryNumber)
     {
         _realNumber = realNumber;
         _imaginaryNumber = imaginaryNumber;
     }
-    ComplexNumber(String number)
+    public ComplexNumber(String number)
     {
         if (number.indexOf('i') == -1)
             _realNumber = Integer.parseInt(number);
@@ -67,7 +67,6 @@ public class ComplexNumber {
             return "0";
         if (_imaginaryNumber == 0)
             return Integer.toString(_realNumber);
-
         if (_realNumber == 0 && _imaginaryNumber > 0)
             return "i" + _imaginaryNumber;
         if (_realNumber == 0)
