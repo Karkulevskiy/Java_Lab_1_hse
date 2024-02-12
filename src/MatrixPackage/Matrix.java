@@ -93,7 +93,4 @@ public final class Matrix implements IMatrix {
         return newMatrix;
     }
 
-    public void determinant(){
-
-    }
 }
